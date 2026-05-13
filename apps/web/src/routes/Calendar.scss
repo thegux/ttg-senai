@@ -1,0 +1,45 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page-calendar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-5;
+  align-items: start;
+
+  @include lg {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    min-width: 0;
+  }
+
+  &__day {
+    @include card;
+    padding: $space-5;
+  }
+
+  &__day-title {
+    font-size: 16px;
+    margin: 0 0 $space-3;
+    text-transform: capitalize;
+  }
+
+  &__empty {
+    margin: 0;
+    color: $color-text-muted;
+    font-size: 14px;
+  }
+
+  &__status {
+    margin: 0;
+    color: $color-text-muted;
+    font-size: 13px;
+
+    &--error { color: $color-danger; }
+  }
+}

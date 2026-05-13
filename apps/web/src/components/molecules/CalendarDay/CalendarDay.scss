@@ -1,0 +1,61 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.molecule-calendar-day {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: $space-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  @include focus-ring;
+
+  &:hover {
+    border-color: $color-primary;
+    box-shadow: $shadow-sm;
+  }
+
+  &--empty {
+    border: none;
+    background: transparent;
+    cursor: default;
+    &:hover { box-shadow: none; }
+  }
+
+  &--today {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
+    .molecule-calendar-day__dot { background: #fff; }
+  }
+
+  &--selected:not(.molecule-calendar-day--today) {
+    border-color: $color-secondary;
+    border-width: 2px;
+  }
+
+  &--muted { opacity: 0.4; }
+
+  &__number {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  &__dots {
+    margin-top: auto;
+    display: flex;
+    gap: 3px;
+  }
+
+  &__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: $color-primary;
+  }
+}

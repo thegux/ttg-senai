@@ -1,0 +1,45 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.organism-calendar-grid {
+  @include card;
+  padding: $space-5;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-4;
+  }
+
+  &__title {
+    font-size: 20px;
+    text-transform: capitalize;
+  }
+
+  &__nav {
+    display: flex;
+    gap: $space-2;
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: $space-2;
+    margin-bottom: $space-2;
+  }
+
+  &__weekday {
+    padding: $space-2 0;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: $color-text-muted;
+  }
+
+  &__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: $space-2;
+  }
+}

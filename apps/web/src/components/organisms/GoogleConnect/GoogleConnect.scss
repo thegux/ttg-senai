@@ -1,0 +1,22 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.organism-google-connect {
+  @include card;
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $space-3;
+
+  &__title {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  &__body {
+    margin: 0;
+    color: $color-text-muted;
+    font-size: 14px;
+  }
+}

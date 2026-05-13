@@ -1,0 +1,57 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.atom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  border: 1px solid transparent;
+  border-radius: $radius-md;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  @include focus-ring;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &--sm { padding: 6px 12px;  font-size: 13px; }
+  &--md { padding: 10px 16px; font-size: 14px; }
+  &--lg { padding: 12px 20px; font-size: 15px; }
+
+  &--full { width: 100%; }
+
+  &--primary {
+    background: $color-primary;
+    color: #fff;
+    &:hover:not(:disabled) { background: $color-primary-dark; }
+  }
+
+  &--secondary {
+    background: $color-secondary;
+    color: #fff;
+    &:hover:not(:disabled) { background: $color-secondary-dark; }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $color-text;
+    &:hover:not(:disabled) { background: rgba(0, 0, 0, 0.05); }
+  }
+
+  &--outline {
+    background: $color-surface;
+    color: $color-text;
+    border-color: $color-border;
+    &:hover:not(:disabled) { background: $color-bg; }
+  }
+
+  &--danger {
+    background: transparent;
+    color: $color-danger;
+    &:hover:not(:disabled) { background: $color-danger-bg; }
+  }
+}

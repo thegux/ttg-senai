@@ -1,0 +1,38 @@
+@use '../../../styles/variables' as *;
+
+.molecule-event-card {
+  border-left: 4px solid $color-primary;
+  background: $color-bg;
+  padding: $space-3 $space-4;
+  border-radius: 0 $radius-md $radius-md 0;
+
+  & + & { margin-top: $space-3; }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-2;
+  }
+
+  &__title {
+    font-size: 15px;
+    margin: 0 0 $space-1;
+    color: $color-text;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin: $space-1 0 0;
+    font-size: 13px;
+    color: $color-text-muted;
+  }
+
+  &__description {
+    margin: $space-2 0 0;
+    font-size: 13px;
+    color: $color-text;
+  }
+}

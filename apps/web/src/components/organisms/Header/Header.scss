@@ -1,0 +1,53 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.organism-header {
+  background: linear-gradient(90deg, $color-primary 0%, $color-secondary 100%);
+  color: #fff;
+  box-shadow: $shadow-md;
+
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: $space-4 $space-5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-4;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+  }
+
+  &__welcome {
+    display: none;
+    flex-direction: column;
+    text-align: right;
+    line-height: 1.2;
+
+    @include md { display: flex; }
+  }
+
+  &__welcome-label {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  &__welcome-name {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &__logout {
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}

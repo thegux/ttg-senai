@@ -1,0 +1,48 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page-dashboard {
+  @include card;
+  padding: $space-6;
+
+  &__title {
+    font-size: 24px;
+    margin-bottom: $space-2;
+  }
+
+  &__subtitle {
+    margin: 0 0 $space-5;
+    color: $color-text-muted;
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $space-4;
+
+    @include md {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    padding: $space-5;
+    border-radius: $radius-md;
+    background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+    color: #fff;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+      text-decoration: none;
+    }
+
+    h2 { margin: 0; font-size: 18px; }
+    p  { margin: 0; opacity: 0.9; font-size: 14px; }
+  }
+}

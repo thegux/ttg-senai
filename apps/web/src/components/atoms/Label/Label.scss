@@ -1,0 +1,9 @@
+@use '../../../styles/variables' as *;
+
+.atom-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: $color-text;
+  margin-bottom: $space-1;
+}

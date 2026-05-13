@@ -1,0 +1,41 @@
+// Brand
+$color-primary: #e31e24;
+$color-primary-dark: #c01a1f;
+$color-secondary: #003366;
+$color-secondary-dark: #002244;
+
+// Neutrals
+$color-bg: #f7f8fa;
+$color-surface: #ffffff;
+$color-border: #e5e7eb;
+$color-text: #1f2937;
+$color-text-muted: #6b7280;
+$color-danger: #b91c1c;
+$color-danger-bg: #fef2f2;
+$color-success: #15803d;
+$color-success-bg: #f0fdf4;
+
+// Radius & spacing
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+$space-7: 48px;
+
+// Shadows
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+// Typography
+$font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+// Breakpoints
+$bp-md: 768px;
+$bp-lg: 1024px;
