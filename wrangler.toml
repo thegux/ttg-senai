@@ -1,0 +1,12 @@
+name = "portal-senai"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "apps/web/dist"
+
+# Local dev (`wrangler pages dev`) reads vars from .dev.vars (gitignored).
+# Production secrets are set in the Cloudflare dashboard:
+#   Pages → portal-senai → Settings → Environment variables → "Encrypt"
+# Set these as secrets, not plaintext:
+#   JWT_SECRET, DATABASE_URL, GOOGLE_CLIENT_SECRET, OPENAI_API_KEY
+# Set these as plaintext (they are not sensitive):
+#   GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, OPENAI_MODEL

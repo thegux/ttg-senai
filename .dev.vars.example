@@ -1,0 +1,12 @@
+# Copy to .dev.vars (gitignored) for `wrangler pages dev`.
+# Format: KEY="value"  (wrangler parses this like dotenv)
+
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/DB?sslmode=require"
+JWT_SECRET="change-me-to-a-long-random-string"
+
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+GOOGLE_REDIRECT_URI="http://localhost:8788/api/google/callback"
+
+OPENAI_API_KEY=""
+OPENAI_MODEL="gpt-4o-mini"
