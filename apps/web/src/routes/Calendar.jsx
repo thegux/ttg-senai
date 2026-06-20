@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { endOfMonth, isSameDay, startOfMonth } from 'date-fns';
 import { DashboardLayout } from '../components/templates/DashboardLayout/DashboardLayout.jsx';
 import { CalendarGrid } from '../components/organisms/CalendarGrid/CalendarGrid.jsx';
@@ -17,6 +17,23 @@ export function Calendar() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [deletingIds, setDeletingIds] = useState(() => new Set());
+  const flashTimer = useRef(null);
+
+  function flashSuccess(message) {
+    setSuccess(message);
+    setError('');
+    clearTimeout(flashTimer.current);
+    flashTimer.current = setTimeout(() => setSuccess(''), 3000);
+  }
+
+  function flashError(message) {
+    setError(message);
+    setSuccess('');
+    clearTimeout(flashTimer.current);
+    flashTimer.current = setTimeout(() => setError(''), 6000);
+  }
 
   useEffect(() => {
     api.googleStatus()
@@ -49,12 +66,26 @@ export function Calendar() {
   );
 
   async function handleDelete(id) {
-    setError('');
+    if (deletingIds.has(id)) return; // evita clique duplo
+    const previous = events;
+    const removed = previous.find((e) => e.id === id);
+
+    // Otimista: some agora.
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+    setDeletingIds((prev) => new Set(prev).add(id));
+
     try {
       await api.deleteEvent(id);
-      setEvents((prev) => prev.filter((e) => e.id !== id));
+      flashSuccess(removed ? `"${removed.title}" foi apagado.` : 'Compromisso apagado.');
     } catch (err) {
-      setError(`Falha ao apagar: ${err.message}`);
+      setEvents(previous); // rollback
+      flashError(`Não consegui apagar: ${err.message}`);
+    } finally {
+      setDeletingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     }
   }
 
@@ -94,6 +125,7 @@ export function Calendar() {
           </section>
 
           {loading && <p className="page-calendar__status">Atualizando…</p>}
+          {success && <p className="page-calendar__status page-calendar__status--success">{success}</p>}
           {error && <p className="page-calendar__status page-calendar__status--error">{error}</p>}
         </div>
 
