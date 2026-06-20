@@ -143,8 +143,9 @@ export async function listEvents(env, userId, { from, to, maxResults = 250 } = {
   return (data.items ?? []).map(serializeEvent);
 }
 
-export async function createEvent(env, userId, { title, description, location, startsAt, endsAt }) {
-  const data = await calFetch(env, userId, '/events', {
+export async function createEvent(env, userId, { title, description, location, startsAt, endsAt, attendees }) {
+  // sendUpdates=all faz o Google mandar email pros convidados.
+  const data = await calFetch(env, userId, '/events?sendUpdates=all', {
     method: 'POST',
     body: JSON.stringify({
       summary: title,
@@ -152,6 +153,7 @@ export async function createEvent(env, userId, { title, description, location, s
       location,
       start: { dateTime: new Date(startsAt).toISOString() },
       end:   { dateTime: new Date(endsAt).toISOString() },
+      attendees: Array.isArray(attendees) ? attendees.map((email) => ({ email })) : undefined,
     }),
   });
   return serializeEvent(data);

@@ -31,6 +31,11 @@ const tools = [
           endsAt:      { type: 'string', description: 'ISO datetime.' },
           location:    { type: 'string' },
           description: { type: 'string' },
+          attendees:   {
+            type: 'array',
+            description: 'Emails dos convidados. Eles receberão o invite por email.',
+            items: { type: 'string', format: 'email' },
+          },
         },
         required: ['title', 'startsAt', 'endsAt'],
       },
