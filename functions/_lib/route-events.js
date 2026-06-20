@@ -47,5 +47,6 @@ function mapGoogleError(c, err) {
     return c.json({ error: 'google_not_connected' }, 409);
   }
   console.error(err);
-  return c.json({ error: 'Internal error' }, 500);
+  // TODO: voltar para 'Internal error' depois de debugar.
+  return c.json({ error: err.message ?? 'Internal error', stack: err.stack }, 500);
 }

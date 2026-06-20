@@ -49,8 +49,13 @@ export function Calendar() {
   );
 
   async function handleDelete(id) {
-    await api.deleteEvent(id);
-    setEvents((prev) => prev.filter((e) => e.id !== id));
+    setError('');
+    try {
+      await api.deleteEvent(id);
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      setError(`Falha ao apagar: ${err.message}`);
+    }
   }
 
   if (connected === null) {
