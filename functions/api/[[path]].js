@@ -17,7 +17,8 @@ app.route('/chat',   chatRouter);
 
 app.onError((err, c) => {
   console.error(err);
-  return c.json({ error: 'Internal error' }, 500);
+  // TODO: voltar para 'Internal error' depois de debugar.
+  return c.json({ error: err.message ?? 'Internal error', stack: err.stack }, 500);
 });
 
 // Pages Functions entry point.
