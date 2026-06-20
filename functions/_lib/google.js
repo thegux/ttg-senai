@@ -91,7 +91,7 @@ async function getAccessToken(env, userId) {
     SELECT access_token, refresh_token, expires_at
     FROM google_accounts WHERE user_id = ${userId}
   `;
-  if (rows.length === 0) throw new Error('Google not connected');
+  if (rows.length === 0) throw new Error('Google not connected'); // string interna usada pelo handler de erro
   const row = rows[0];
 
   const expiresAt = new Date(row.expires_at).getTime();

@@ -103,6 +103,10 @@ chatRouter.post('/', async (c) => {
     return c.json({ error: 'google_not_connected' }, 409);
   }
 
+  if (!c.env.OPENAI_API_KEY) {
+    return c.json({ error: 'A integração com a IA não está configurada.' }, 503);
+  }
+
   const conversation = [{ role: 'system', content: systemPrompt(userName) }, ...messages];
 
   try {
@@ -141,7 +145,7 @@ chatRouter.post('/', async (c) => {
     });
   } catch (err) {
     console.error(err);
-    return c.json({ error: err.message || 'Internal error' }, 500);
+    return c.json({ error: err.message || 'Erro interno do servidor.' }, 500);
   }
 });
 

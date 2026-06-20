@@ -4,6 +4,8 @@ import { Login } from './routes/Login.jsx';
 import { Signup } from './routes/Signup.jsx';
 import { Dashboard } from './routes/Dashboard.jsx';
 import { Calendar } from './routes/Calendar.jsx';
+import { ForgotPassword } from './routes/ForgotPassword.jsx';
+import { ResetPassword } from './routes/ResetPassword.jsx';
 
 function RequireAuth({ children }) {
   const { user, loading } = useAuth();
@@ -24,6 +26,8 @@ export function App() {
     <Routes>
       <Route path="/login"  element={<RedirectIfAuthed><Login  /></RedirectIfAuthed>} />
       <Route path="/signup" element={<RedirectIfAuthed><Signup /></RedirectIfAuthed>} />
+      <Route path="/forgot-password" element={<RedirectIfAuthed><ForgotPassword /></RedirectIfAuthed>} />
+      <Route path="/reset-password"  element={<RedirectIfAuthed><ResetPassword  /></RedirectIfAuthed>} />
       <Route path="/"         element={<RequireAuth><Dashboard /></RequireAuth>} />
       <Route path="/calendar" element={<RequireAuth><Calendar  /></RequireAuth>} />
       <Route path="*" element={<Navigate to="/" replace />} />

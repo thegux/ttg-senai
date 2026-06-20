@@ -88,6 +88,12 @@ export function AuthForm({ mode, onSubmit }) {
         {busy ? 'Aguarde…' : isSignup ? 'Criar conta' : 'Entrar'}
       </Button>
 
+      {!isSignup && (
+        <p className="organism-auth-form__forgot">
+          <Link to="/forgot-password">Esqueci minha senha</Link>
+        </p>
+      )}
+
       <p className="organism-auth-form__footer">
         {isSignup ? (
           <>Já possui conta? <Link to="/login">Entrar</Link></>

@@ -19,10 +19,10 @@ eventsRouter.post('/', async (c) => {
   try {
     const { title, description, location, startsAt, endsAt } = await c.req.json();
     if (!title || !startsAt || !endsAt) {
-      return c.json({ error: 'title, startsAt, endsAt required' }, 400);
+      return c.json({ error: 'Título, início e fim são obrigatórios.' }, 400);
     }
     if (new Date(endsAt) <= new Date(startsAt)) {
-      return c.json({ error: 'endsAt must be after startsAt' }, 400);
+      return c.json({ error: 'O fim precisa ser depois do início.' }, 400);
     }
     const event = await googleService.createEvent(c.env, c.get('userId'), {
       title, description, location, startsAt, endsAt,
@@ -47,6 +47,5 @@ function mapGoogleError(c, err) {
     return c.json({ error: 'google_not_connected' }, 409);
   }
   console.error(err);
-  // TODO: voltar para 'Internal error' depois de debugar.
-  return c.json({ error: err.message ?? 'Internal error', stack: err.stack }, 500);
+  return c.json({ error: err.message ?? 'Erro interno do servidor.' }, 500);
 }

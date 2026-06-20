@@ -52,12 +52,12 @@ export function clearSessionCookie(c) {
 // Hono middleware. Sets c.var.userId on success, else 401.
 export async function requireUser(c, next) {
   const token = getCookie(c, COOKIE_NAME);
-  if (!token) return c.json({ error: 'Not authenticated' }, 401);
+  if (!token) return c.json({ error: 'Você precisa estar logado.' }, 401);
   try {
     const payload = await verifyJwt(c.env, token);
     c.set('userId', payload.sub);
     await next();
   } catch {
-    return c.json({ error: 'Invalid session' }, 401);
+    return c.json({ error: 'Sessão inválida ou expirada. Faça login de novo.' }, 401);
   }
 }
