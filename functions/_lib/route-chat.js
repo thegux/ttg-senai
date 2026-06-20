@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import OpenAI from 'openai';
 import { requireUser } from './session.js';
 import * as googleService from './google.js';
 
@@ -72,6 +71,22 @@ Regras:
 - Após criar ou apagar um evento, responda com 1 frase curta confirmando.`;
 }
 
+async function chatCompletion(env, body) {
+  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const text = await r.text();
+    throw new Error(`OpenAI ${r.status}: ${text}`);
+  }
+  return r.json();
+}
+
 export const chatRouter = new Hono();
 chatRouter.use('*', requireUser);
 
@@ -83,12 +98,11 @@ chatRouter.post('/', async (c) => {
     return c.json({ error: 'google_not_connected' }, 409);
   }
 
-  const openai = new OpenAI({ apiKey: c.env.OPENAI_API_KEY });
   const conversation = [{ role: 'system', content: systemPrompt(userName) }, ...messages];
 
   try {
     for (let i = 0; i < 6; i++) {
-      const completion = await openai.chat.completions.create({
+      const completion = await chatCompletion(c.env, {
         model: c.env.OPENAI_MODEL || 'gpt-4o-mini',
         messages: conversation,
         tools,
