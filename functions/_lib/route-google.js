@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { requireUser, signShortLived, verifyJwt } from './session.js';
 import * as googleService from './google.js';
+import { logUsage } from './usage-log.js';
 
 export const googleRouter = new Hono();
 
@@ -17,6 +18,7 @@ googleRouter.get('/connect', requireUser, async (c) => {
 
 googleRouter.post('/disconnect', requireUser, async (c) => {
   await googleService.disconnect(c.env, c.get('userId'));
+  await logUsage(c.env, c.get('userId'), 'google_disconnected');
   return c.json({ ok: true });
 });
 
@@ -36,9 +38,11 @@ googleRouter.get('/callback', async (c) => {
   try {
     const tokens = await googleService.exchangeCodeForTokens(c.env, code);
     await googleService.saveTokens(c.env, userId, tokens);
+    await logUsage(c.env, userId, 'google_connected');
     return c.html(closePage('Conta Google conectada. Pode fechar esta janela.', true));
   } catch (err) {
     console.error(err);
+    await logUsage(c.env, userId, 'google_connect_failed', { error: err?.message });
     return c.html(closePage('Falha ao conectar com o Google.'), 500);
   }
 });

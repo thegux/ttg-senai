@@ -1,0 +1,154 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page-admin-logs {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-4;
+  }
+
+  &__title {
+    margin: 0 0 $space-1;
+    font-size: 24px;
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: $color-text-muted;
+    font-size: 13px;
+  }
+
+  &__h2 {
+    margin: 0 0 $space-3;
+    font-size: 16px;
+  }
+
+  &__stats {
+    @include card;
+    padding: $space-4;
+  }
+
+  &__stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: $space-3;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    padding: $space-3;
+    background: $color-bg;
+    border-radius: $radius-md;
+    border-left: 3px solid $color-primary;
+  }
+
+  &__stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__stat-label {
+    font-size: 12px;
+    color: $color-text-muted;
+    font-family: Menlo, Consolas, monospace;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 14px;
+
+    select {
+      padding: 6px 10px;
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      font-size: 13px;
+      background: #fff;
+    }
+  }
+
+  &__error {
+    padding: $space-3 $space-4;
+    background: $color-danger-bg;
+    color: $color-danger;
+    border-radius: $radius-md;
+    font-size: 13px;
+    margin: 0;
+  }
+
+  &__table-wrap {
+    @include card;
+    padding: 0;
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    th, td {
+      padding: $space-3 $space-4;
+      text-align: left;
+      border-bottom: 1px solid $color-border;
+      vertical-align: top;
+    }
+
+    th {
+      background: $color-bg;
+      font-weight: 600;
+      color: $color-text-muted;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td { border-bottom: none; }
+  }
+
+  &__when {
+    white-space: nowrap;
+    color: $color-text-muted;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__action {
+    display: inline-block;
+    padding: 2px 8px;
+    background: $color-bg;
+    border-radius: $radius-sm;
+    font-size: 12px;
+    color: $color-text;
+  }
+
+  &__email {
+    color: $color-text-muted;
+    font-size: 12px;
+  }
+
+  &__meta {
+    margin: 0;
+    font-family: Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: $color-text-muted;
+    white-space: pre-wrap;
+    max-width: 320px;
+    max-height: 120px;
+    overflow: auto;
+  }
+
+  &__empty {
+    text-align: center !important;
+    color: $color-text-muted;
+    padding: $space-6 !important;
+  }
+}

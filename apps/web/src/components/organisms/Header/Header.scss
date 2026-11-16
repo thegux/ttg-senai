@@ -50,4 +50,19 @@
       background: rgba(255, 255, 255, 0.2);
     }
   }
+
+  &__admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: $radius-sm;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+
+    &:hover { background: rgba(255, 255, 255, 0.22); }
+  }
 }

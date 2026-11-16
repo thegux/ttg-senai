@@ -39,4 +39,11 @@ export const api = {
   googleDisconnect: ()    => request('/google/disconnect', { method: 'POST' }),
 
   chat: (body) => request('/chat', { method: 'POST', body }),
+
+  adminLogs: ({ limit = 200, action } = {}) => {
+    const params = new URLSearchParams({ limit: String(limit) });
+    if (action) params.set('action', action);
+    return request(`/admin/logs?${params}`);
+  },
+  adminStats: () => request('/admin/stats'),
 };

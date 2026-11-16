@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { requireUser } from './session.js';
 import * as googleService from './google.js';
+import { logUsage } from './usage-log.js';
 
 export const eventsRouter = new Hono();
 eventsRouter.use('*', requireUser);
@@ -27,6 +28,9 @@ eventsRouter.post('/', async (c) => {
     const event = await googleService.createEvent(c.env, c.get('userId'), {
       title, description, location, startsAt, endsAt,
     });
+    await logUsage(c.env, c.get('userId'), 'event_created', {
+      source: 'ui', eventId: event.id, title: event.title, startsAt: event.startsAt,
+    });
     return c.json({ event }, 201);
   } catch (err) {
     return mapGoogleError(c, err);
@@ -35,7 +39,9 @@ eventsRouter.post('/', async (c) => {
 
 eventsRouter.delete('/:id', async (c) => {
   try {
-    await googleService.deleteEvent(c.env, c.get('userId'), c.req.param('id'));
+    const eventId = c.req.param('id');
+    await googleService.deleteEvent(c.env, c.get('userId'), eventId);
+    await logUsage(c.env, c.get('userId'), 'event_deleted', { source: 'ui', eventId });
     return c.json({ ok: true });
   } catch (err) {
     return mapGoogleError(c, err);

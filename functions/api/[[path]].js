@@ -6,6 +6,7 @@ import { authRouter }   from '../_lib/route-auth.js';
 import { googleRouter } from '../_lib/route-google.js';
 import { eventsRouter } from '../_lib/route-events.js';
 import { chatRouter }   from '../_lib/route-chat.js';
+import { adminRouter }  from '../_lib/route-admin.js';
 
 const app = new Hono().basePath('/api');
 
@@ -14,6 +15,7 @@ app.route('/auth',   authRouter);
 app.route('/google', googleRouter);
 app.route('/events', eventsRouter);
 app.route('/chat',   chatRouter);
+app.route('/admin',  adminRouter);
 
 app.onError((err, c) => {
   console.error(err);

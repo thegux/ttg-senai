@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
+import { getSql } from './db.js';
 
 const ALG = 'HS256';
 const COOKIE_NAME = 'session';
@@ -60,4 +61,16 @@ export async function requireUser(c, next) {
   } catch {
     return c.json({ error: 'Sessão inválida ou expirada. Faça login de novo.' }, 401);
   }
+}
+
+// Middleware para rotas administrativas. Deve rodar DEPOIS de requireUser.
+export async function requireAdmin(c, next) {
+  const userId = c.get('userId');
+  if (!userId) return c.json({ error: 'Você precisa estar logado.' }, 401);
+  const sql = getSql(c.env);
+  const rows = await sql`SELECT role FROM users WHERE id = ${userId}`;
+  if (rows.length === 0 || rows[0].role !== 'admin') {
+    return c.json({ error: 'Acesso restrito a administradores.' }, 403);
+  }
+  await next();
 }

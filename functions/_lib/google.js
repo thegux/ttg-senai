@@ -41,7 +41,7 @@ export async function exchangeCodeForTokens(env, code) {
   return r.json(); // { access_token, refresh_token, expires_in, scope, ... }
 }
 
-async function refreshTokens(env, refreshToken) {
+async function refreshTokens(env, userId, refreshToken) {
   const body = new URLSearchParams({
     client_id: env.GOOGLE_CLIENT_ID,
     client_secret: env.GOOGLE_CLIENT_SECRET,
@@ -53,8 +53,20 @@ async function refreshTokens(env, refreshToken) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body,
   });
-  if (!r.ok) throw new Error(`Google token refresh failed: ${await r.text()}`);
-  return r.json(); // { access_token, expires_in, scope, ... } (no new refresh_token)
+  const data = await r.json().catch(() => ({}));
+
+  // invalid_grant = refresh token foi revogado, expirou (modo Testing) ou já foi usado.
+  // Apagamos o vínculo e sinalizamos pro frontend que precisa reconectar.
+  if (!r.ok && data.error === 'invalid_grant') {
+    console.warn(`refresh invalid_grant para user ${userId}; limpando google_accounts`);
+    await disconnect(env, userId);
+    throw new Error('Google not connected');
+  }
+
+  if (!r.ok) {
+    throw new Error(`Google token refresh failed: ${JSON.stringify(data)}`);
+  }
+  return data; // { access_token, expires_in, scope, ... } (sem novo refresh_token)
 }
 
 export async function saveTokens(env, userId, tokens) {
@@ -98,7 +110,7 @@ async function getAccessToken(env, userId) {
   // refresh if expired or expiring in the next 60s
   if (expiresAt > Date.now() + 60_000) return row.access_token;
 
-  const fresh = await refreshTokens(env, row.refresh_token);
+  const fresh = await refreshTokens(env, userId, row.refresh_token);
   await saveTokens(env, userId, { ...fresh, refresh_token: row.refresh_token });
   return fresh.access_token;
 }
@@ -119,15 +131,30 @@ async function calFetch(env, userId, path, init = {}) {
   return data;
 }
 
+// Extrai o rótulo de relevância embutido na descrição ("[Relevância: alta]").
+// Retorna a descrição limpa (sem a tag) e o valor do rótulo, se houver.
+const RELEVANCE_RE = /^\s*\[Relev[aâ]ncia:\s*(baixa|m[eé]dia|alta)\]\s*\n?\n?/i;
+
+function parseRelevance(desc) {
+  if (!desc) return { relevance: null, cleanDescription: null };
+  const m = desc.match(RELEVANCE_RE);
+  if (!m) return { relevance: null, cleanDescription: desc };
+  const raw = m[1].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const rest = desc.slice(m[0].length).trim();
+  return { relevance: raw, cleanDescription: rest || null };
+}
+
 function serializeEvent(e) {
+  const { relevance, cleanDescription } = parseRelevance(e.description);
   return {
     id: e.id,
     title: e.summary ?? '(sem título)',
-    description: e.description ?? null,
+    description: cleanDescription,
     location: e.location ?? null,
     startsAt: e.start?.dateTime ?? e.start?.date ?? null,
     endsAt:   e.end?.dateTime   ?? e.end?.date   ?? null,
     htmlLink: e.htmlLink ?? null,
+    relevance, // 'baixa' | 'media' | 'alta' | null
   };
 }
 
@@ -143,13 +170,18 @@ export async function listEvents(env, userId, { from, to, maxResults = 250 } = {
   return (data.items ?? []).map(serializeEvent);
 }
 
-export async function createEvent(env, userId, { title, description, location, startsAt, endsAt, attendees }) {
+export async function createEvent(env, userId, { title, description, location, startsAt, endsAt, attendees, relevance }) {
   // sendUpdates=all faz o Google mandar email pros convidados.
+  // Relevância é persistida como prefixo na descrição, pra sobreviver mesmo que o evento
+  // seja editado fora do portal (no app oficial do Google Calendar).
+  const relTag = relevance ? `[Relevância: ${relevance}]` : null;
+  const composedDescription = [relTag, description].filter(Boolean).join('\n\n') || undefined;
+
   const data = await calFetch(env, userId, '/events?sendUpdates=all', {
     method: 'POST',
     body: JSON.stringify({
       summary: title,
-      description,
+      description: composedDescription,
       location,
       start: { dateTime: new Date(startsAt).toISOString() },
       end:   { dateTime: new Date(endsAt).toISOString() },

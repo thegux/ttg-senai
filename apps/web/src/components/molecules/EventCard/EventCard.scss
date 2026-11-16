@@ -8,6 +8,10 @@
 
   & + & { margin-top: $space-3; }
 
+  &--rel-baixa { border-left-color: #94a3b8; }  // cinza
+  &--rel-media { border-left-color: #f59e0b; }  // âmbar
+  &--rel-alta  { border-left-color: #dc2626; }  // vermelho (crítico)
+
   &__header {
     display: flex;
     align-items: flex-start;
@@ -15,10 +19,42 @@
     gap: $space-2;
   }
 
+  &__title-wrap {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $space-2;
+    min-width: 0;
+  }
+
   &__title {
     font-size: 15px;
     margin: 0 0 $space-1;
     color: $color-text;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+
+    &--baixa {
+      background: #eef2f7;
+      color: #475569;
+    }
+    &--media {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    &--alta {
+      background: #fee2e2;
+      color: #991b1b;
+    }
   }
 
   &__meta {
