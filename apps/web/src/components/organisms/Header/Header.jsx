@@ -7,7 +7,7 @@ export function Header({ user, onLogout }) {
   return (
     <header className="organism-header">
       <div className="organism-header__inner">
-        <Logo variant="light" />
+        <Logo />
         <div className="organism-header__user">
           <div className="organism-header__welcome">
             <span className="organism-header__welcome-label">Bem-vindo,</span>
