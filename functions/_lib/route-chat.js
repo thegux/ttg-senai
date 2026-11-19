@@ -103,14 +103,32 @@ async function runTool(env, userId, name, args) {
   throw new Error(`Unknown tool: ${name}`);
 }
 
+const TZ = 'America/Bahia';
+
+function localDateLabel(date) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    timeZone: TZ, weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
+  }).format(date);
+}
+
+function upcomingDays(count) {
+  const now = Date.now();
+  return Array.from({ length: count }, (_, i) => `- ${localDateLabel(new Date(now + i * 86400000))}`).join('\n');
+}
+
 function systemPrompt(userName) {
-  const now = new Date().toISOString();
+  const now = new Date();
+  const time = new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' }).format(now);
   return `Você é a TIA, assistente virtual do Portal do Colaborador SENAI CIMATEC.
 Fala em português brasileiro, de forma concisa e profissional.
 Você ajuda ${userName} a gerenciar compromissos no Google Calendar.
 
+Data e hora:
+- Agora é ${localDateLabel(now)}, ${time} (fuso America/Bahia, UTC-3). Use esse fuso para os horários do usuário.
+- Calendário dos próximos dias (use esta lista para converter "segunda", "amanhã", "semana que vem" etc. em datas; NUNCA calcule dia da semana por conta própria):
+${upcomingDays(21)}
+
 Regras:
-- Hora atual: ${now} (UTC). Assuma fuso America/Bahia (UTC-3) quando o usuário falar em horários locais.
 - Antes de criar um evento, SEMPRE use list_events para checar conflitos na janela proposta.
 - Se houver conflito, explique e proponha 2-3 horários alternativos próximos.
 - Confirme título, início e fim com o usuário antes de chamar create_event.
