@@ -5,9 +5,9 @@ import { Button } from '../../atoms/Button/Button.jsx';
 import './EventCard.scss';
 
 const RELEVANCE_LABEL = {
-  baixa: 'Baixa',
-  media: 'Média',
-  alta:  'Alta',
+  baixa: 'Pode esperar',
+  media: 'Importante',
+  alta:  'Urgente',
 };
 
 export function EventCard({ event, onDelete }) {
@@ -26,7 +26,7 @@ export function EventCard({ event, onDelete }) {
           {relevance && (
             <span
               className={`molecule-event-card__badge molecule-event-card__badge--${relevance}`}
-              title={`Relevância ${RELEVANCE_LABEL[relevance]}`}
+              title={`Relevância: ${RELEVANCE_LABEL[relevance]}`}
             >
               {RELEVANCE_LABEL[relevance]}
             </span>

@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Calendar } from 'lucide-react';
+import { Home, Calendar, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../../../lib/auth.jsx';
 import './Sidebar.scss';
 
 const items = [
@@ -8,10 +9,14 @@ const items = [
 ];
 
 export function Sidebar() {
+  const { user } = useAuth();
+  const visible = user?.role === 'admin'
+    ? [...items, { to: '/admin/logs', label: 'Logs', Icon: ShieldCheck }]
+    : items;
   return (
     <nav className="organism-sidebar">
       <ul className="organism-sidebar__list">
-        {items.map(({ to, label, Icon }) => (
+        {visible.map(({ to, label, Icon }) => (
           <li key={to} className="organism-sidebar__item">
             <NavLink
               to={to}

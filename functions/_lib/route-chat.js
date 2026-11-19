@@ -143,7 +143,8 @@ Rótulo de relevância:
 - Toda chamada de create_event exige o parâmetro relevance ("baixa", "media" ou "alta").
 - Decida com base no contexto: reuniões rápidas de alinhamento geralmente são "baixa"; compromissos recorrentes de trabalho são "media"; defesas, provas, entregas críticas ou eventos com diretoria são "alta".
 - Se o usuário indicar prioridade explicitamente ("urgente", "só pra marcar", "crítico"), respeite.
-- Mencione o rótulo na frase de confirmação ao final (ex.: "Marquei a reunião com relevância alta.").`;
+- Para o usuário, chame os rótulos sempre de "Urgente" (alta), "Importante" (media) e "Pode esperar" (baixa). Nunca diga "alta", "média" ou "baixa".
+- Mencione o rótulo na frase de confirmação ao final (ex.: "Marquei a reunião como Urgente.").`;
 }
 
 async function chatCompletion(env, body) {

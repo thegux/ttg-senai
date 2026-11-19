@@ -11,6 +11,25 @@ const SUGGESTIONS = [
   'Tenho horário livre na quinta de manhã?',
 ];
 
+const LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
+
+function renderContent(text) {
+  const parts = [];
+  let last = 0;
+  for (const m of text.matchAll(LINK_RE)) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    const href = m[2] ?? m[3];
+    parts.push(
+      <a key={m.index} href={href} target="_blank" rel="noopener noreferrer">
+        {m[1] ?? 'abrir link'}
+      </a>,
+    );
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts;
+}
+
 export function EventChat({ userName, onEventsChanged }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -73,7 +92,7 @@ export function EventChat({ userName, onEventsChanged }) {
             <div className="organism-event-chat__bubble-avatar">
               {m.role === 'user' ? <UserIcon size={14} /> : <Bot size={14} />}
             </div>
-            <div className="organism-event-chat__bubble">{m.content}</div>
+            <div className="organism-event-chat__bubble">{renderContent(m.content)}</div>
           </div>
         ))}
 
